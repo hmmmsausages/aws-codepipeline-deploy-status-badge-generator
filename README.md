@@ -3,7 +3,6 @@
 [![aws-codepipeline-deploy-status-badge-generator Pipeline Status]( https://0zroxzsyj3.execute-api.eu-west-2.amazonaws.com/Stage//pipeline/aws-codepipeline-deploy-status-badge-generator-pipeline/status?label=aws-codepipeline-deploy-status-badge-generator)](https://eu-central-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/aws-codepipeline-deploy-status-badge-generator-pipeline/view?region=eu-west-2)
 [![Deployed aws-codepipeline-deploy-status-badge-generator Commit]( https://0zroxzsyj3.execute-api.eu-west-2.amazonaws.com/Stage//pipeline/aws-codepipeline-deploy-status-badge-generator-pipeline/commit/id?label=aws-codepipeline-deploy-status-badge-generator)]( https://0zroxzsyj3.execute-api.eu-west-2.amazonaws.com/Stage//pipeline/aws-codepipeline-deploy-status-badge-generator-pipeline/commit/url)
 
-
 Infamously AWS CodePipeline doesn't offer you any way of retrieving the deployment status of your pipeline in the shape of status badge that you can add to your `README.md` file.
 
 >'What's the point of having a pipeline then?' - you might ask and rightfully so!
@@ -28,11 +27,11 @@ Having any number of CodePipelines like this one:
 ![Example Pipeline](./images/example-codepipeline.png)
 
 1. `Source` stage that is connected to VCS so we can fetch the commit ID from the stage's meta data
-    * **Note:** Currently this stage needs to have the the work `source` in its name (case-insensitive), so the generator recognises it correctly
+    * **Note:** ☝️ Currently this stage needs to have the the word `source` in its name (case-insensitive), so the generator recognises it correctly
 1. `Deploy` stage that deploys your application, i.e. if the stage has been successfully completed it means that your app has been successfully deployed.
-    * **Note:** Currently this stage needs to have the the work `deploy` in its name (case-insensitive), so the generator recognises it correctly
+    * **Note:** ☝️ Currently this stage needs to have the the word `deploy` in its name (case-insensitive), so the generator recognises it correctly
 
-**Note**: The generator doesn't care about any other stages, so feel free to have as many in any constelation as you like.
+**Note**: ☝️ The generator doesn't care about any other stages, so feel free to have as many in any constelation as you like.
 
 ### Fetch Badges
 
@@ -49,7 +48,7 @@ After you've triggered one of your pipelines you can get your badges via below e
 | `GET /pipeline/{pipelinaName}/url` | Redirect link to GitHub commit of last deployed commit | [GitHub direct link to last deployed commit]( https://0zroxzsyj3.execute-api.eu-west-2.amazonaws.com/Stage//pipeline/aws-codepipeline-deploy-status-badge-generator-pipeline/commit/url) |
 | `POST /pipeline/{pipelinaName}` | Update deployment status (requires API key) | `curl -d '{"status": "SUCCEEDED", "deployedCommitId": "123", "deployedCommitUrl": "https://commit.url"}' -H 'X-API-Key:123-123-123-123'  https://0zroxzsyj3.execute-api.eu-west-2.amazonaws.com/Stage//pipeline/test-pipeline` |
 
-**Note**: You will have to manually set up the API key within AWS API Gateway for the POST endpoint if you would like to use it.
+**Note**: ☝️ You will have to manually set up the API key within AWS API Gateway for the POST endpoint if you would like to use it. Usually you want have any reason to use this endpoint if you simply want your badges to be generated and updated based on CodePipeline events.
 
 ## Deployment
 
@@ -71,10 +70,17 @@ After the deployment your AWS account is left with:
 
 * `aws-codepipeline-deploy-status-badge-generator-api` - Lambda that generates and serves badges and meta information
 * `aws-codepipeline-deploy-status-badge` - API Gateway that routes HTTP(S) requests to above Lambda.
-  * **Note**: You'll get your API URL from here. If you like you can add a custom domain manually as well.
+  * **Note**: ☝️  You'll get your API URL from here. If you like you can add a custom domain manually as well.
 * `aws-codepipeline-deploy-status-badge-generator-update` - Lambda that listens to CodePipeline CloudWatch Events to update deployment information in DynamoDB
 * `aws-codepipeline-deploy-status-badge` - CloudWatch EventBridge Rule to trigger above Lambda on CodePipeline state change events
 * `CodePipelineDeploymentInformation` - DynamoDB table that stores deployment information, like pipeline name, pipeline url, commit hash, and deployment status
+
+## To do
+
+* Automated tests!!!
+* Make `source` and `deploy` CodePipeline stage names the generator is listening to configurable
+* Add more flexibility in terms of badge labelling
+* ...
 
 ## Contribute
 
