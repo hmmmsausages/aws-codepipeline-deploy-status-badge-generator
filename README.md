@@ -3,7 +3,7 @@
 [![aws-codepipeline-deploy-status-badge-generator Pipeline Status]( https://0zroxzsyj3.execute-api.eu-west-2.amazonaws.com/Stage//pipeline/aws-codepipeline-deploy-status-badge-generator-pipeline/status?label=aws-codepipeline-deploy-status-badge-generator)](https://eu-central-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/aws-codepipeline-deploy-status-badge-generator-pipeline/view?region=eu-west-2)
 [![Deployed aws-codepipeline-deploy-status-badge-generator Commit]( https://0zroxzsyj3.execute-api.eu-west-2.amazonaws.com/Stage//pipeline/aws-codepipeline-deploy-status-badge-generator-pipeline/commit/id?label=aws-codepipeline-deploy-status-badge-generator)]( https://0zroxzsyj3.execute-api.eu-west-2.amazonaws.com/Stage//pipeline/aws-codepipeline-deploy-status-badge-generator-pipeline/commit/url)
 
-Infamously AWS CodePipeline doesn't offer you any way of retrieving the deployment status of your pipeline in the shape of status badge that you can add to your `README.md` file.
+Infamously AWS CodePipeline doesn't offer you any way of retrieving the deployment status of your pipeline in the shape of status badge that you can add to your `README.md` file. Like the ones above!
 
 >'What's the point of having a pipeline then?' - you might ask and rightfully so!
 
