@@ -1,0 +1,114 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  AWS SAM Template for aws-codepipeline-deploy-status-badge-generator,
+  which listens on CodePipeline CloudWatch State Execution Change Events
+  to spot when a deployment starts and stops to generate a badge SVG file
+  that can be added to GitHub for example
+
+Resources:
+  
+  DeploymentInformationTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: CodePipelineDeploymentInformation
+      AttributeDefinitions:
+        - AttributeName: pipelineName
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pipelineName
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  BadgeGeneratorApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: v1
+      Cors: "'*'"
+
+  BadgeGenerator:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: aws-codepipeline-deploy-status-badge-generator-api
+      CodeUri: aws-codepipeline-deploy-status-badge-generator-api/
+      Handler: app.handler
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          DYANMO_DB_TABLE_NAME: !Ref DeploymentInformationTable
+      Policies:
+        - Statement:
+          - Effect: Allow
+            Action:
+              - 'dynamodb:*'
+            Resource:
+              - !GetAtt DeploymentInformationTable.Arn
+      Events:
+        GetCommitId:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BadgeGeneratorApi
+            Method: GET
+            Path: /pipeline/{pipelineName}/commit/id
+        GetCommitUrl:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BadgeGeneratorApi
+            Method: GET
+            Path: /pipeline/{pipelineName}/commit/url
+        GetStatus:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BadgeGeneratorApi
+            Method: GET
+            Path: /pipeline/{pipelineName}/status
+        Update:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BadgeGeneratorApi
+            Path: /pipeline/{pipelineName}
+            Method: POST
+            Auth:
+              ApiKeyRequired: true
+
+
+
+  DeploymenInformationUpdater:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: aws-codepipeline-deploy-status-badge-generator-updater
+      CodeUri: aws-codepipeline-deploy-status-badge-generator-updater/
+      Handler: app.handler
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          DYANMO_DB_TABLE_NAME: !Ref DeploymentInformationTable
+      Policies:
+        - Statement:
+          - Effect: Allow
+            Action:
+              - codepipeline:ListActionExecutions
+            Resource: '*'
+        - Statement:
+          - Effect: Allow
+            Action:
+              - 'dynamodb:*'
+            Resource:
+              - !GetAtt DeploymentInformationTable.Arn
+      Events:
+        CloudWatchCodePipeline:
+          Type: EventBridgeRule
+          Properties:
+            Pattern:
+              source: 
+                - "aws.codepipeline"
+              detail-type: 
+                - "CodePipeline Stage Execution State Change"
+              detail:
+                state:
+                  - STARTED
+                  - FAILED
+                  - SUCCEEDED
+            InputPath: "$.detail"

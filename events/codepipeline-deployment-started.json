@@ -1,0 +1,7 @@
+{
+    "pipeline": "aws-codepipeline-deploy-status-badge-generator-pipeline",
+    "execution-id": "123-123-123-123",
+    "stage": "Deployment",
+    "state": "STARTED",
+    "version": 2
+}

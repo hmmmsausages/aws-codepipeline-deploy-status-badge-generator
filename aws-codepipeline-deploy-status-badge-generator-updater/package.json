@@ -1,0 +1,15 @@
+{
+  "name": "aws-codepipeline-deploy-status-badge-generator-updater",
+  "version": "1.0.0",
+  "description": "Writes CodePipeline deployment information into DynamoDB based on CodePipeline CloudWatch events",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "hmmmsausages",
+  "dependencies": {},
+  "devDependencies": {
+    "aws-sdk": "^2.656.0",
+    "standard": "^14.3.4"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "body": "{\"status\": \"STARTED\", \"deployedCommitId\": \"123\"}",
+  "resource": "/pipeline/{pipelineName}",
+  "httpMethod": "POST",
+  "pathParameters": {
+    "pipelineName": "aws-codepipeline-deploy-status-badge-generator-pipeline"
+  }
+}
